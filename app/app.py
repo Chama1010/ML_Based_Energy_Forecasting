@@ -5,10 +5,7 @@ import streamlit as st
 from pathlib import Path
 
 
-# ==================================================
 # PAGE CONFIGURATION
-# ==================================================
-
 st.set_page_config(
     page_title="Energy Forecasting Dashboard",
     page_icon="⚡",
@@ -16,9 +13,7 @@ st.set_page_config(
 )
 
 
-# ==================================================
 # PROJECT PATHS
-# ==================================================
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 
@@ -42,24 +37,18 @@ DATA_PATH = (
 )
 
 
-# ==================================================
 # LOAD MODEL
-# ==================================================
 
 model = joblib.load(MODEL_PATH)
 
 
-# ==================================================
 # LOAD FEATURE CONFIGURATION
-# ==================================================
 
 with open(FEATURES_PATH, "r") as f:
     features = json.load(f)
 
 
-# ==================================================
 # LOAD HISTORICAL DATA
-# ==================================================
 
 forecast_df = pd.read_csv(
     DATA_PATH,
@@ -70,9 +59,7 @@ forecast_df = pd.read_csv(
 forecast_df = forecast_df.sort_index()
 
 
-# ==================================================
 # FORECAST FEATURE CREATION
-# ==================================================
 
 def create_forecast_features(timestamp, history):
 
@@ -101,9 +88,7 @@ def create_forecast_features(timestamp, history):
     )[features]
 
 
-# ==================================================
 # GENERATE 24-HOUR RECURSIVE FORECAST
-# ==================================================
 
 last_timestamp = forecast_df.index.max()
 
@@ -136,9 +121,7 @@ for timestamp in future_timestamps:
     ] = prediction
 
 
-# ==================================================
 # CREATE FORECAST DATAFRAME
-# ==================================================
 
 forecast_results = pd.DataFrame(
     {
@@ -150,9 +133,7 @@ forecast_results = pd.DataFrame(
 forecast_results = forecast_results.set_index("date")
 
 
-# ==================================================
 # FORECAST SUMMARY CALCULATIONS
-# ==================================================
 
 average_consumption = (
     forecast_results["Predicted_Appliances"].mean()
@@ -175,9 +156,7 @@ minimum_consumption = (
 )
 
 
-# ==================================================
 # DEMAND CLASSIFICATION
-# ==================================================
 
 historical_consumption = (
     forecast_df["Appliances"]
@@ -205,18 +184,13 @@ forecast_results.loc[
 ] = "High"
 
 
-# ==================================================
 # HIGH-DEMAND PERIODS
-# ==================================================
-
 high_demand_periods = forecast_results[
     forecast_results["Demand_Level"] == "High"
 ].copy()
 
 
-# ==================================================
 # DASHBOARD
-# ==================================================
 
 st.title("⚡ Energy Forecasting Dashboard")
 
@@ -226,9 +200,7 @@ st.write(
 )
 
 
-# ==================================================
 # MODEL INFORMATION
-# ==================================================
 
 st.subheader("Model Information")
 
@@ -247,9 +219,7 @@ with col2:
     )
 
 
-# ==================================================
 # FORECAST INFORMATION
-# ==================================================
 
 st.subheader("24-Hour Forecast")
 
@@ -278,9 +248,7 @@ with col3:
     )
 
 
-# ==================================================
 # FORECAST SUMMARY
-# ==================================================
 
 st.subheader("Forecast Summary")
 
@@ -315,9 +283,7 @@ st.write(
 )
 
 
-# ==================================================
 # 24-HOUR FORECAST CHART
-# ==================================================
 
 st.subheader("24-Hour Energy Forecast")
 
@@ -331,9 +297,7 @@ st.line_chart(
 )
 
 
-# ==================================================
 # HISTORICAL + FORECAST COMPARISON
-# ==================================================
 
 st.subheader("Historical and 24-Hour Forecast")
 
@@ -371,9 +335,7 @@ st.line_chart(
 )
 
 
-# ==================================================
 # DEMAND CLASSIFICATION
-# ==================================================
 
 st.subheader("Demand Classification")
 
@@ -392,9 +354,7 @@ with col2:
     )
 
 
-# ==================================================
 # HIGH-DEMAND PERIODS
-# ==================================================
 
 st.subheader("High-Demand Periods")
 
@@ -424,9 +384,7 @@ else:
     )
 
 
-# ==================================================
 # ENERGY MANAGEMENT RECOMMENDATION
-# ==================================================
 
 st.subheader("Energy Management Recommendation")
 
@@ -453,9 +411,7 @@ else:
     )
 
 
-# ==================================================
 # DETAILED FORECAST TABLE
-# ==================================================
 
 st.subheader("Detailed 24-Hour Forecast")
 
