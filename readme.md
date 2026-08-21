@@ -469,42 +469,7 @@ The dashboard loads the saved Random Forest model and forecasting configuration 
 
 ---
 
-## 16. Project Structure
-
-```text
-Energy_Forecasting/
-│
-├── data/
-│   ├── raw/
-│   │   └── ...
-│   │
-│   └── processed/
-│       └── engineered_energy_data.csv
-│
-├── models/
-│   ├── final_random_forest.pkl
-│   └── forecast_features.json
-│
-├── notebooks/
-│   ├── 01_...
-│   ├── 02_...
-│   ├── 03_...
-│   ├── 04_...
-│   └── 05_...
-│
-├── app/
-│   └── app.py
-│
-├── requirements.txt
-│
-└── README.md
-```
-
-The exact notebook filenames may vary depending on the final repository structure.
-
----
-
-## 17. Technologies
+## 16. Technologies
 
 * Python
 * pandas
@@ -520,7 +485,7 @@ The exact notebook filenames may vary depending on the final repository structur
 
 ---
 
-## 18. Installation
+## 17. Installation
 
 Create and activate a virtual environment:
 
@@ -548,7 +513,7 @@ pip install streamlit
 
 ---
 
-## 19. Running the Dashboard
+## 18. Running the Dashboard
 
 From the project root:
 
@@ -560,7 +525,7 @@ Streamlit will provide a local URL that can be opened in a web browser.
 
 ---
 
-## 20. Reproducibility
+## 19. Reproducibility
 
 The project follows a chronological time-series workflow.
 
@@ -576,7 +541,7 @@ To reproduce the forecasting process:
 
 ---
 
-## 21. Limitations
+## 20. Limitations
 
 ### Limited Observation Period
 
@@ -600,7 +565,7 @@ The final forecasting model primarily uses historical appliance consumption and 
 
 ---
 
-## 22. Future Improvements
+## 21. Future Improvements
 
 Possible future extensions include:
 
@@ -623,7 +588,7 @@ These are potential extensions and are not part of the current final implementat
 
 ---
 
-## 23. Dataset and Research Attribution
+## 22. Dataset and Research Attribution
 
 The underlying dataset used in this project was created by the original researchers and is not an original dataset produced by this project.
 
@@ -649,7 +614,7 @@ https://github.com/LuisM78/Appliances-energy-prediction-data
 
 ---
 
-## 24. Comparability Notice
+## 23. Comparability Notice
 
 The results presented in this project are **not direct reproductions of the results reported in the original research paper**.
 
@@ -667,7 +632,7 @@ The original research is cited as the source of the dataset and as the academic 
 
 ---
 
-## 25. Acknowledgement
+## 24. Acknowledgement
 
 This project acknowledges the work of:
 
