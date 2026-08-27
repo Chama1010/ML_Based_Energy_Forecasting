@@ -505,12 +505,6 @@ Install the project dependencies:
 pip install -r requirements.txt
 ```
 
-If Streamlit is not included in `requirements.txt`:
-
-```bash
-pip install streamlit
-```
-
 ---
 
 ## 18. Running the Dashboard
