@@ -1,8 +1,8 @@
 # Appliance Energy Consumption Forecasting
 
-A machine learning based time-series forecasting system for predicting short-term household appliance energy consumption.
+A historical machine-learning prototype for 24-hour household appliance energy forecasting using measurements collected from one building in 2016.
 
-This project transforms historical appliance energy measurements into an hourly forecasting problem, engineers temporal features, evaluates baseline and machine learning models, and deploys the selected model through an interactive Streamlit dashboard.
+This project transforms the historical appliance energy measurements into an hourly forecasting problem, engineers temporal features, evaluates baseline and machine learning models, and provides a Streamlit dashboard for exploring a retrospective forecast from the dataset's last observation.
 
 The final system generates a **24-hour recursive forecast** of appliance energy consumption.
 
@@ -18,7 +18,7 @@ The main objectives of this project are to:
 * Train and evaluate machine learning regression models.
 * Compare Random Forest and XGBoost with the baseline approaches.
 * Evaluate both one-step and 24-hour recursive forecasting performance.
-* Select the best-performing model based on the final test results.
+* Select a deployment model based on held-out 24-hour recursive test results.
 * Build a 24-hour recursive forecasting pipeline.
 * Deploy the forecasting system through a Streamlit dashboard.
 
@@ -255,7 +255,7 @@ This baseline captures recurring intraday consumption patterns.
 
 A `RandomForestRegressor` was trained using the engineered temporal features.
 
-Random Forest was selected as the final deployment model because it achieved the strongest performance among the evaluated models on the final 24-hour recursive test.
+Random Forest was selected for deployment because it achieved the lowest MAE among the evaluated models on the held-out 24-hour recursive test. The reported test metrics come from models trained on the chronological training period. Separately, `notebooks/04_forecasting.ipynb` refits the selected Random Forest configuration on all available engineered historical rows for the deployment artifact; that refitted model has not been evaluated on a later, independent period.
 
 The final trained model is stored as:
 
@@ -275,11 +275,11 @@ models/forecast_features.json
 
 XGBoost was evaluated as an alternative tree-based machine learning model.
 
-The model was evaluated using both:
+The model was evaluated using:
 
 * One-step validation
 * 24-hour recursive validation
-* Final 24-hour recursive testing
+* Held-out 24-hour recursive testing
 
 An important finding was that XGBoost achieved stronger one-step validation performance than Random Forest, but this advantage did not carry over to recursive 24-hour forecasting.
 
@@ -327,7 +327,7 @@ Continue recursively
 Predict t+24
 ```
 
-This evaluation is more representative of the final application because the deployed system also produces a 24-hour recursive forecast.
+The held-out test uses 19 non-overlapping forecast windows with origins every 24 hours, from 2016-05-08 05:00 through 2016-05-26 05:00. Each window predicts the following 24 hours, for 456 scored hourly predictions in total, ending at 2016-05-27 05:00. The remaining rows at the end of the source series are not part of these scored windows. These historical test results estimate performance for this dataset and split; they are not evidence of current-day performance or generalization to other households.
 
 ---
 
@@ -355,9 +355,9 @@ Higher values indicate better explanatory performance.
 
 ---
 
-## 12. Final Test Results
+## 12. Held-Out Test Results
 
-The final 24-hour recursive test results were:
+The following metrics summarize the held-out 24-hour recursive test windows described above. Random Forest and XGBoost were trained on the chronological training partition; these scores do not come from the all-history deployment refit.
 
 | Model             |        MAE |       RMSE |
 | ----------------- | ---------: | ---------: |
@@ -383,7 +383,7 @@ RMSE = 404.79
 R²   = 0.07935
 ```
 
-Based on the final test results, **Random Forest was the best-performing model among the approaches evaluated in this project**.
+Based on these held-out windows, **Random Forest had the lowest MAE among the approaches evaluated in this project**.
 
 The results should not be interpreted as claiming that Random Forest is universally the best model for appliance energy forecasting.
 
@@ -416,13 +416,13 @@ Tuned Recursive RMSE = 387.70
 
 This shows that strong one-step prediction performance does not necessarily translate into strong multi-step recursive forecasting performance.
 
-For this reason, the final model selection was based primarily on the forecasting scenario required by the application.
+For this reason, model selection was based primarily on the forecasting scenario required by the application. The reported validation figures are separate from the held-out test and from the all-history deployment refit.
 
 ---
 
 ## 14. Final Forecasting Pipeline
 
-The final system uses the Random Forest model to generate a 24-hour recursive forecast.
+The dashboard uses a Random Forest artifact refitted on all 3,121 available engineered hourly observations, from 2016-01-18 17:00 through 2016-05-27 17:00. Its 24-hour forecast is a retrospective continuation from that last observation, covering 2016-05-27 18:00 through 2016-05-28 17:00; it is not a live forecast for the present day.
 
 The process begins from the latest available historical observation.
 
@@ -448,7 +448,7 @@ Predicted_Appliances
 
 ## 15. Streamlit Dashboard
 
-The project includes an interactive Streamlit dashboard for displaying the forecasting results.
+The project includes an interactive Streamlit dashboard for displaying the retrospective forecasting results. It identifies the last historical observation and the forecast window. The displayed values are model predictions, not live measurements or validated predictions for present-day households.
 
 The dashboard provides:
 
@@ -505,6 +505,30 @@ Install the project dependencies:
 pip install -r requirements.txt
 ```
 
+### Data and Model Files
+
+Place the UCI source file at `data/raw/energydata_complete.csv`. The raw-data directory is intentionally excluded from Git; obtain the dataset from the UCI source cited above and retain its attribution. The processed CSV files are included in the repository.
+
+The deployment model is tracked with Git LFS. Install Git LFS, then retrieve the model payload after cloning:
+
+```bash
+git lfs install
+git lfs pull
+```
+
+Confirm that `models/final_random_forest.pkl` is the full model file, not a small LFS pointer, before launching the dashboard.
+
+### Reproducing the Notebooks
+
+Run the notebooks in order from the project root or the `notebooks` directory:
+
+1. `notebooks/01_data_understanding.ipynb` reads the raw dataset and writes `data/processed/hourly_energy_data.csv`.
+2. `notebooks/02_feature_engineering.ipynb` writes `data/processed/engineered_energy_data.csv`.
+3. `notebooks/03_model_training.ipynb` evaluates the existing chronological train/validation/test workflow.
+4. `notebooks/04_forecasting.ipynb` refits and saves the deployment model and feature configuration, and writes a forecast CSV.
+
+The fourth notebook intentionally overwrites the tracked model, feature configuration, and forecast output when its save cells are run. Skip those save cells during review-only runs, or preserve/restore the tracked artifacts first. The dashboard itself does not retrain the model.
+
 ---
 
 ## 18. Running the Dashboard
@@ -516,6 +540,8 @@ streamlit run app/app.py
 ```
 
 Streamlit will provide a local URL that can be opened in a web browser.
+
+The dashboard displays a retrospective forecast from the dataset's latest observation in May 2016. It does not fetch current measurements and must not be interpreted as a present-day forecast.
 
 ---
 
@@ -532,6 +558,7 @@ To reproduce the forecasting process:
 * Use the saved model configuration.
 * Use the saved final model for deployment.
 * Maintain the same preprocessing and feature-engineering procedures.
+* Interpret held-out test scores only for their documented 2016 forecast windows; distinguish them from the deployment model refitted on all available history.
 
 ---
 
@@ -544,6 +571,10 @@ The original dataset covers approximately 4.5 months. Therefore, the dataset doe
 ### Building-Specific Data
 
 The original measurements were collected from a particular low-energy residential building. The resulting model should therefore not automatically be assumed to generalize to other buildings or households.
+
+### Historical Forecast Only
+
+The source series ends on 2016-05-27. The dashboard forecast is a historical illustration from that endpoint, not a prediction for current conditions or a validated operational forecast.
 
 ### Recursive Forecasting Error
 

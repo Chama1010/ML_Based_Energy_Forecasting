@@ -195,8 +195,15 @@ high_demand_periods = forecast_results[
 st.title("⚡ Energy Forecasting Dashboard")
 
 st.write(
-    "24-hour recursive appliance energy consumption "
-    "forecasting system."
+    "Retrospective 24-hour appliance energy forecast "
+    "from the UCI household dataset."
+)
+st.info(
+    f"Historical dataset endpoint: {last_timestamp:%Y-%m-%d %H:%M}. "
+    f"Forecast window: {forecast_results.index[0]:%Y-%m-%d %H:%M} "
+    f"to {forecast_results.index[-1]:%Y-%m-%d %H:%M}. "
+    "These are model predictions from 2016 data, not live measurements "
+    "or validated predictions for present-day households."
 )
 
 
