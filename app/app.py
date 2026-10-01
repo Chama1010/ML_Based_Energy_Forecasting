@@ -209,7 +209,7 @@ def keep_high_percentile_above_low():
 
 
 st.title("Historical Energy Forecast Explorer")
-st.caption("Appliance-energy demonstration using one building's 2016 UCI dataset.")
+st.caption("Appliance-energy prediction")
 
 try:
     model_signature = file_signature(MODEL_PATH)
@@ -297,12 +297,12 @@ selected_forecast["Displayed_Energy"] = (
 )
 
 forecast_end = selected_forecast.index[-1]
-st.info(
-    f"Latest stored observation: **{latest_timestamp:%Y-%m-%d %H:%M}**  "
-    f"| Forecast window: **{forecast_start:%Y-%m-%d %H:%M}** to "
-    f"**{forecast_end:%Y-%m-%d %H:%M}** ({horizon} of 24 hours). "
-    "Predictions continue directly after the historical endpoint; they are not live measurements."
-)
+# st.info(
+#     f"Latest stored observation: **{latest_timestamp:%Y-%m-%d %H:%M}**  "
+#     f"| Forecast window: **{forecast_start:%Y-%m-%d %H:%M}** to "
+#     f"**{forecast_end:%Y-%m-%d %H:%M}** ({horizon} of 24 hours). "
+#     "Predictions continue directly after the historical endpoint; they are not live measurements."
+# )
 
 forecast_tab, history_tab, model_tab = st.tabs(
     ["Forecast", "Historical Data", "Model Information"]
