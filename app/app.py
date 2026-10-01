@@ -308,6 +308,7 @@ forecast_tab, history_tab, model_tab = st.tabs(
     ["Forecast", "Historical Data", "Model Information"]
 )
 
+#forcast tab
 with forecast_tab:
     st.subheader("Forecast summary")
     total_energy = selected_forecast["Predicted_Appliances"].sum()
@@ -435,7 +436,7 @@ with forecast_tab:
             file_name="historical_energy_forecast.csv",
             mime="text/csv",
         )
-
+#history tab
 with history_tab:
     st.subheader("Recorded appliance consumption")
     st.caption(
@@ -501,6 +502,7 @@ with history_tab:
         historical_table.index.name = "Timestamp"
         st.dataframe(historical_table.round(3), width="stretch")
 
+#model tab
 with model_tab:
     st.subheader("Saved model and data")
     model_columns = st.columns(2)
